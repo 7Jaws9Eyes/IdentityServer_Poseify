@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>3e3541f1-e305-4153-a7a7-d26d95cab81a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Duende.IdentityServer" Version="6.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.5" />
+  </ItemGroup>
+
+</Project>
