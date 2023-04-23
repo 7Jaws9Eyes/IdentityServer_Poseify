@@ -18,6 +18,7 @@ namespace IdentityServer_Posefiy
                     UserClaims = new List<string>
                     {
                         JwtClaimTypes.Email,
+                        JwtClaimTypes.Id,
                         JwtClaimTypes.EmailVerified
                     }
                 }
@@ -45,14 +46,14 @@ namespace IdentityServer_Posefiy
                     // where to redirect to after logout
                     PostLogoutRedirectUris = { "https://localhost:44462/signout-callback-oidc" },
 
-                    AllowOfflineAccess = true,
+                    //AllowOfflineAccess = true,
 
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "verification",
-                        "poseifyApiScope"
+                        "poseifyApiScope",
+                        "verification"
                     }
                 }
             };
