@@ -1,39 +1,37 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 using System.Collections.Generic;
 
 namespace IdentityServer_Posefiy
 {
     public static class Config
     {
-
         public static IEnumerable<IdentityResource> IdentityResources =>
             new List<IdentityResource>
             {
-                        new IdentityResources.OpenId(),
-                        new IdentityResources.Profile(),
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+                new IdentityResource()
+                {
+                    Name = "verification",
+                    UserClaims = new List<string>
+                    {
+                        JwtClaimTypes.Email,
+                        JwtClaimTypes.EmailVerified
+                    }
+                }
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ApiScope("poseify", "Poseify API")
+                new ApiScope("poseifyApiScope", "Poseify API Scope")
             };
 
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
-                // machine to machine client
-                new Client
-                {
-                    ClientId = "client",
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    // scopes that client has access to
-                    AllowedScopes = { "poseify" }
-                },
-                
                 new Client
                 {
                     ClientId = "PoseifyBff",
@@ -42,15 +40,19 @@ namespace IdentityServer_Posefiy
                     AllowedGrantTypes = GrantTypes.Code,
                     
                     // where to redirect to after login
-                    RedirectUris = { "https://localhost:7184/signin-oidc" },
+                    RedirectUris = { "https://localhost:44462/signin-oidc" },
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:7184/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:44462/signout-callback-oidc" },
+
+                    AllowOfflineAccess = true,
 
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "verification",
+                        "poseifyApiScope"
                     }
                 }
             };
