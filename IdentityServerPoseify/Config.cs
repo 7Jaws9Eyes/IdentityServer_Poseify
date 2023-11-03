@@ -26,18 +26,41 @@ public static class Config
             new Client
             {
                 ClientId = "PoseifyBff",
-                ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
                     
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:44462/signin-oidc" },
+                RedirectUris = { "https://localhost:44462/signin-oidc", "https://poseify.ngrok.app/signin-oidc" },
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:44462/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:44462/signout-callback-oidc", "https://poseify.ngrok.app/signout-callback-oidc" },
 
                 //AllowOfflineAccess = true,
                 AlwaysIncludeUserClaimsInIdToken = true,
+
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "poseifyApiScope"
+                }
+            },
+            new Client
+            {
+                ClientId = "PoseifyNative",
+                
+                AllowedGrantTypes = GrantTypes.Code,
+                AllowOfflineAccess = true,
+                RequirePkce = true,  // Enforce PKCE
+                RequireClientSecret = false,
+                RefreshTokenUsage = TokenUsage.ReUse,
+                RequireConsent = false,
+                AlwaysIncludeUserClaimsInIdToken = true,    
+
+                // where to redirect to after login
+                RedirectUris = { "exp://192.168.0.17:8081" },
+                // where to redirect to after logout
+                PostLogoutRedirectUris = { "exp://192.168.0.17:8081" },
 
                 AllowedScopes = new List<string>
                 {
