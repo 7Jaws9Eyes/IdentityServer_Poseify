@@ -26,7 +26,6 @@ public static class Config
             new Client
             {
                 ClientId = "PoseifyBff",
-                ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
                     
@@ -49,7 +48,6 @@ public static class Config
             new Client
             {
                 ClientId = "PoseifyNative",
-                ClientSecrets = { new Secret("hehe".Sha256()) },
                 
                 AllowedGrantTypes = GrantTypes.Code,
                 AllowOfflineAccess = true,
