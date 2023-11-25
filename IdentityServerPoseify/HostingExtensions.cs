@@ -1,4 +1,6 @@
 using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Validation;
 using IdentityServerPoseify.Data;
 using IdentityServerPoseify.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +11,23 @@ namespace IdentityServerPoseify;
 
 internal static class HostingExtensions
 {
+
+    public class CustomRedirectUriValidator : IRedirectUriValidator
+    {
+        public Task<bool> IsPostLogoutRedirectUriValidAsync(string requestedUri, Client client)
+        {
+            // Implement your validation logic for post-logout redirect URIs
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
+        {
+            // Implement your validation logic for login redirect URIs
+            // For example, you can allow any URI or apply specific rules
+            return Task.FromResult(true);
+        }
+    }
+
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
@@ -19,6 +38,22 @@ internal static class HostingExtensions
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+        
+        var clients = Config.Clients.ToArray();
+        var webSecret = builder.Configuration["Clients:Secrets:Web"];
+        var mobileSecret = builder.Configuration["Clients:Secrets:Mobile"];
+
+        // setup secret for web, if defined
+        if (!string.IsNullOrEmpty(webSecret))
+        {
+            clients[0].ClientSecrets = new List<Secret>() { new Secret(webSecret.Sha256()) };
+        }
+
+        // setup secret for mobile, if defined
+        if (!string.IsNullOrEmpty(mobileSecret))
+        {
+            clients[1].ClientSecrets = new List<Secret>() { new Secret(mobileSecret.Sha256()) };
+        }
 
         builder.Services
             .AddIdentityServer(options =>
@@ -35,7 +70,8 @@ internal static class HostingExtensions
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddAspNetIdentity<ApplicationUser>()
-            .AddProfileService<CustomProfileService>();
+            .AddProfileService<CustomProfileService>()
+            .AddRedirectUriValidator<CustomRedirectUriValidator>();
 
         builder.Services.AddAuthentication()
             .AddGoogle(options =>

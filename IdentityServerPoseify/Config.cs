@@ -26,6 +26,7 @@ public static class Config
             new Client
             {
                 ClientId = "PoseifyBff",
+                ClientId = "PoseifyBff", // SPA Web Client
 
                 AllowedGrantTypes = GrantTypes.Code,
                     
@@ -44,10 +45,11 @@ public static class Config
                     IdentityServerConstants.StandardScopes.Profile,
                     "poseifyApiScope"
                 }
+            
             },
             new Client
             {
-                ClientId = "PoseifyNative",
+                ClientId = "PoseifyNative", // Mobile Client
                 
                 AllowedGrantTypes = GrantTypes.Code,
                 AllowOfflineAccess = true,
